@@ -2,7 +2,7 @@
  Keyword: union find, DFS
  References: https://discuss.leetcode.com/topic/109642/java-c-union-find
  */
-
+// union find
 class Solution {
     /* union find */
     public List<List<String>> accountsMerge(List<List<String>> accounts) {
@@ -43,5 +43,44 @@ class Solution {
     }
     public String find(String s,Map<String,String> p){
         return p.get(s)==s?s:find(p.get(s),p);
+    }
+}
+
+// DFS
+class Solution {
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        // build the graph
+        Map<String,Set<String>> graph=new HashMap<>();
+        for(List<String> ls:accounts){
+            for(int i=1;i<ls.size();i++){
+                if(!graph.containsKey(ls.get(i))) graph.put(ls.get(i),new HashSet<String>());
+                graph.get(ls.get(i)).add(ls.get(1));
+                graph.get(ls.get(1)).add(ls.get(i));
+            }
+        }
+        // traverse the graph, find out all the connected subgraph
+        Set<String> visited=new HashSet<>();
+        List<List<String>> result=new ArrayList<>();
+        for(List<String> ls:accounts){
+	    if(!visited.contains(ls.get(1))){
+		List<String> ans=new ArrayList<>();
+		visited.add(ls.get(1));
+		ans.add(ls.get(1));
+		dfs(graph,visited,ls.get(1),ans);
+		Collections.sort(ans);
+		ans.add(0,ls.get(0));
+		result.add(ans);
+	    }
+        }
+        return result;
+    }
+    public void dfs(Map<String,Set<String>> graph, Set<String> visited, String s,List<String> ans){
+        for(String str:graph.get(s)){
+            if(!visited.contains(str)){
+                visited.add(str);
+                ans.add(str);
+                dfs(graph,visited,str,ans);
+            }
+        }
     }
 }
