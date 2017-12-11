@@ -11,21 +11,13 @@ class Solution {
     }
     
     public void helper(List<Integer> ls, int n, int k, int start){
-        if(ls.size()==k && sum(ls)==n){
+        if(ls.size()==k && n==0){
             result.add(new ArrayList<>(ls));
             return;
         } 
         for(int i=start;i<=9;i++){
             ls.add(i);
-            helper(ls,n,k,i+1);
+            helper(ls,n-i,k,i+1);
             ls.remove((Integer)i);
         }
     }
-    
-    public int sum(List<Integer> ls){
-        int ans=0;
-        if(ls.isEmpty()) return ans;
-        for(int i:ls) ans+=i;
-        return ans;
-    }
-}
